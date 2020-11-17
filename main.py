@@ -1,6 +1,7 @@
 import random
 import copy
 import MakePic
+import sys
 
 WIDTH = HEIGHT = 9
 NUMS = {1,2,3,4,5,6,7,8,9}
@@ -77,11 +78,14 @@ def RemoveNum(grid):
     return 0
 
 def RemoveNums(grid, remaining=5):
+    newGrid = copy.deepcopy(grid)
     limit = 81-remaining
     taken = 0
     while taken < limit:
-        if RemoveNum(grid) == 0:
+        if RemoveNum(newGrid) == 0:
             taken+=1
+    return newGrid
+
 
 def GetFilledGrid():
     result = -1
@@ -90,24 +94,33 @@ def GetFilledGrid():
         result = FillGrid(grid)
     return grid
 
+def strIsInt(givenStr):
+    try: 
+        int(givenStr)
+        return True
+    except ValueError:
+        return False
+
 def main():
-    #grid = InitGrid()
+    numPages = 1
+    if len(sys.argv) > 1 and strIsInt(sys.argv[1]):
+        numPages = int(sys.argv[1])
+
     remaining = 40
+    if len(sys.argv) > 2 and strIsInt(sys.argv[2]) and int(sys.argv[2]) <= 81:
+        remaining = int(sys.argv[2])
 
-    grid = GetFilledGrid()
-    print("SOLVED")
-    ShowGrid(grid)
-    RemoveNums(grid, remaining)
-    #print("UNSOLVED")
-    #ShowGrid(grid)
+    for _ in range(numPages):
 
-    grid2 = GetFilledGrid()
-    print("SOLVED")
-    ShowGrid(grid2)
-    RemoveNums(grid2, remaining)
-    #print("got here")
-    MakePic.main(grid, grid2, 1)
+        gridSolved = GetFilledGrid()
+        gridUnsolved = RemoveNums(gridSolved, remaining)
 
+
+        grid2Solved = GetFilledGrid()
+        grid2Unsolved = RemoveNums(grid2Solved, remaining)
+
+        MakePic.main(gridUnsolved, grid2Unsolved, False)#make puzzle page
+        MakePic.main(gridSolved, grid2Solved, True)#make solution page
 
 if __name__ == "__main__":
     main()

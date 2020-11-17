@@ -1,19 +1,42 @@
 from PIL import Image, ImageDraw, ImageFont
+import os
+import re
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 DIMENSIONS = (850, 1100)
-FONT = ImageFont.truetype("arial.ttf", 25)
+FONT = ImageFont.truetype("arial.ttf", 26)
+
+BORDER = 200
+FROM_TOP = 100
+SEP = 145 #needs to be this
+SMOL_SEP = 48
+TOP_ADD = 435 + 50
+
+###########################
+
+PUZZLE_FILE_PREFIX = "page"
+currFolder = os.path.dirname(__file__)
+PUZZLE_FOLDER = os.path.join(currFolder, "puzzles")
+
+if not os.path.exists(PUZZLE_FOLDER):
+    os.mkdir(PUZZLE_FOLDER)
+
+PATTERN = "^{}(\d+).pdf$".format(PUZZLE_FILE_PREFIX)
+COMPILED = re.compile(PATTERN)
+
+##############################
+
+ANSWER_FILE_PREFIX = "answerspage"
+ANSWER_FOLDER = os.path.join(currFolder, "answers")
+
+if not os.path.exists(ANSWER_FOLDER):
+    os.mkdir(ANSWER_FOLDER)
 
 
 def MakeLine(drawn, start, end, width):
     drawn.line((start, end), fill=BLACK, width=width)
 
-BORDER = 150
-FROM_TOP = 100
-SEP = 145 #needs to be this
-SMOL_SEP = 48
-TOP_ADD = 435 + 50
 
 def CreateAllLines(drawn):
     #first outline
@@ -35,7 +58,6 @@ def CreateAllLines(drawn):
         MakeLine(drawn, (BORDER+i, FROM_TOP), (BORDER+i, FROM_TOP+SEP*3), 1)
 
     ##second box
-    TOP_ADD = 435 + 50
 
      #first outline
     for i in range(4):#horzontal
@@ -57,7 +79,7 @@ def CreateAllLines(drawn):
 
     #MakeLine(drawn, (BORDER, 100), (DIMENSIONS[0]-BORDER, 100), 3)
 
-def AddAllText(drawn, numbers1, numbers2, pageNum):
+def AddAllText(drawn, numbers1, numbers2, pageNum, isAnswerKey):
     PADDING = 15
 
     for x, row in enumerate(numbers1):#top puzzle
@@ -76,20 +98,49 @@ def AddAllText(drawn, numbers1, numbers2, pageNum):
     MakeText(drawn, DIMENSIONS[0]-70, DIMENSIONS[1]-50, pageNum)
 
 def MakeText(drawn, x, y, value):
+    #make it bigger font then thrink to reduce pixelation
+    pixelResize = 2 #make twice as big
+
     drawn.text((x, y), str(value),BLACK, font=FONT)
 
-def main(numbers1, numbers2, page):
-    #print("weewoo")
+def NewFileName():
+    #print("path is", PUZZLE_FOLDER)
+
+    #check to see what highest suffix is
+    maxNum = 0
+    for file in os.listdir(PUZZLE_FOLDER):
+        #numStr = int(re.findall(COMPILED, file)[0])
+        numStr = re.findall(COMPILED, file)
+        if len(numStr) == 0:
+            continue
+        numStr = int(numStr[0])
+
+        if numStr > maxNum:
+            maxNum = numStr
+
+    newNum = maxNum+1
+
+    newName = PUZZLE_FILE_PREFIX+str(newNum)+".pdf"
+    ansName = ANSWER_FILE_PREFIX+str(maxNum)+".pdf"
+    ansPath = os.path.join(ANSWER_FOLDER, ansName)
+    return newNum, os.path.join(PUZZLE_FOLDER, newName), ansPath
+
+
+def main(numbers1, numbers2, isAnswerKey):
     img = Image.new('RGB', DIMENSIONS, color = WHITE)
     drawn = ImageDraw.Draw(img)
 
     CreateAllLines(drawn)
-    AddAllText(drawn, numbers1, numbers2, page)
-    #d.text((10,10), "Hello world", font=FONT, fill=BLACK)
 
+    pgNum, pgPath, ansPath = NewFileName()
+    AddAllText(drawn, numbers1, numbers2, pgNum, isAnswerKey)
+    #d.text((10,10), "Hello world", font=FONT, fill=BLACK)
+    if(isAnswerKey):
+        img.save(ansPath)
+    else:
+        img.save(pgPath)
     
-    img.save('page1.pdf')
-    img.show()
+    #img.show()
 
 if __name__ == "__main__":
     main(1,1)
