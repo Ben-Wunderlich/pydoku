@@ -118,19 +118,23 @@ def NewFileName():
     return newNum, os.path.join(PUZZLE_FOLDER, newName), ansPath
 
 
-def main(numbers1, numbers2, isAnswerKey):
+def MakePage(numbers1, numbers2, isAnswerKey):
     img = Image.new('RGB', DIMENSIONS, color = WHITE)
     drawn = ImageDraw.Draw(img)
 
     CreateAllLines(drawn)
 
     pgNum, pgPath, ansPath = NewFileName()
+    if isAnswerKey:
+        pgNum -= 1
+
     AddAllText(drawn, numbers1, numbers2, pgNum, isAnswerKey)
     if(isAnswerKey):
         img.save(ansPath)
     else:
         img.save(pgPath)
-    #img.show()
+
+    return pgNum
 
 if __name__ == "__main__":
-    main(1,1)
+    input("This file is not to be run, try running main.py\n\npress enter to exit this")

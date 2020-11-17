@@ -48,9 +48,7 @@ def FillGrid(grid):
                 return -1
             grid[y][x] = el
 
-    return 0
-
-            
+    return 0            
 
 
 def ShowGrid(arr):
@@ -102,6 +100,8 @@ def strIsInt(givenStr):
         return False
 
 def main():
+    print("Starting page generation\n")
+
     numPages = 1
     if len(sys.argv) > 1 and strIsInt(sys.argv[1]):
         numPages = int(sys.argv[1])
@@ -119,8 +119,13 @@ def main():
         grid2Solved = GetFilledGrid()
         grid2Unsolved = RemoveNums(grid2Solved, remaining)
 
-        MakePic.main(gridUnsolved, grid2Unsolved, False)#make puzzle page
-        MakePic.main(gridSolved, grid2Solved, True)#make solution page
+        #pagenum could be from either
+        MakePic.MakePage(gridUnsolved, grid2Unsolved, False)#make puzzle page
+        pagenum = MakePic.MakePage(gridSolved, grid2Solved, True)#make solution page
+
+        print("Finished page", pagenum)
+
+    print("\nFinished all pages, now exiting")
 
 if __name__ == "__main__":
     main()
