@@ -7,7 +7,7 @@ WHITE = (255, 255, 255)
 DIMENSIONS = (850, 1100)
 FONT = ImageFont.truetype("arial.ttf", 26)
 
-BORDER = 200
+BORDER = 205
 FROM_TOP = 100
 SEP = 145 #needs to be this
 SMOL_SEP = 48
