@@ -59,7 +59,7 @@ def CreateAllLines(drawn):
 
     ##second box
 
-     #first outline
+    #first outline
     for i in range(4):#horzontal
         MakeLine(drawn, (BORDER, FROM_TOP+SEP*i + TOP_ADD), (BORDER+SEP*3, FROM_TOP+SEP*i + TOP_ADD), 3) 
     
@@ -76,8 +76,6 @@ def CreateAllLines(drawn):
         if i > 435-SMOL_SEP:
             break
         MakeLine(drawn, (BORDER+i, FROM_TOP+ TOP_ADD), (BORDER+i, FROM_TOP+SEP*3+ TOP_ADD), 1)
-
-    #MakeLine(drawn, (BORDER, 100), (DIMENSIONS[0]-BORDER, 100), 3)
 
 def AddAllText(drawn, numbers1, numbers2, pageNum, isAnswerKey):
     PADDING = 15
@@ -98,18 +96,12 @@ def AddAllText(drawn, numbers1, numbers2, pageNum, isAnswerKey):
     MakeText(drawn, DIMENSIONS[0]-70, DIMENSIONS[1]-50, pageNum)
 
 def MakeText(drawn, x, y, value):
-    #make it bigger font then thrink to reduce pixelation
-    pixelResize = 2 #make twice as big
-
     drawn.text((x, y), str(value),BLACK, font=FONT)
 
 def NewFileName():
-    #print("path is", PUZZLE_FOLDER)
-
     #check to see what highest suffix is
     maxNum = 0
     for file in os.listdir(PUZZLE_FOLDER):
-        #numStr = int(re.findall(COMPILED, file)[0])
         numStr = re.findall(COMPILED, file)
         if len(numStr) == 0:
             continue
@@ -134,12 +126,10 @@ def main(numbers1, numbers2, isAnswerKey):
 
     pgNum, pgPath, ansPath = NewFileName()
     AddAllText(drawn, numbers1, numbers2, pgNum, isAnswerKey)
-    #d.text((10,10), "Hello world", font=FONT, fill=BLACK)
     if(isAnswerKey):
         img.save(ansPath)
     else:
         img.save(pgPath)
-    
     #img.show()
 
 if __name__ == "__main__":
