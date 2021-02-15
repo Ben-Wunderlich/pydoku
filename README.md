@@ -8,4 +8,4 @@ The **main.py** program takes 2 optional arguments
 
 For example to create 100 pages of puzzles, each with 35 filled in you would run ```python main.py 100 35``` or ```py -3 main.py 100 35``` if that doesnt work on your system.
 
-[page example](https://github.com/Ben-Wunderlich/pydoku/blob/master/example.pdf)
+![page example](https://github.com/Ben-Wunderlich/pydoku/blob/master/example.png)
